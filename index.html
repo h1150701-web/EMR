@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#dff3ff">
+<title>MyMed Pocket — 多國語言隨身電子病歷</title>
+<style>
+:root{
+  --blue-50:#f4fbff; --blue-100:#e7f6ff; --blue-200:#cceeff;
+  --blue-300:#9fdcff; --blue-500:#4ca9df; --blue-600:#278bc4;
+  --blue-700:#176d9d; --ink:#17324a; --muted:#6c8294;
+  --white:#fff; --line:#d9eaf4; --danger:#d95c67;
+  --shadow:0 18px 50px rgba(32,111,151,.12);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",
+  "Noto Sans JP","Noto Sans KR",Arial,sans-serif;color:var(--ink);
+  background:linear-gradient(145deg,#f7fcff 0%,#eef9ff 48%,#f9fcff 100%);
+}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1200px;margin:auto;padding:22px}
+.header{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:18px 20px;background:rgba(255,255,255,.82);backdrop-filter:blur(16px);
+  border:1px solid rgba(159,220,255,.55);border-radius:24px;box-shadow:var(--shadow);
+  position:sticky;top:12px;z-index:20;
+}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{
+  width:48px;height:48px;border-radius:15px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--blue-500),#86d6ff);color:white;
+  font-weight:800;font-size:25px;box-shadow:0 8px 20px rgba(76,169,223,.3)
+}
+.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;color:var(--muted);margin:3px 0 0}
+.actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+select,.btn{
+  border:1px solid var(--line);background:white;color:var(--ink);
+  border-radius:12px;padding:10px 13px
+}
+.btn.primary{background:var(--blue-600);color:white;border-color:var(--blue-600)}
+.btn.soft{background:var(--blue-50)}
+.btn.danger{color:var(--danger)}
+.hero{padding:42px 10px 28px;text-align:center}
+.hero h2{font-size:clamp(30px,5vw,48px);line-height:1.08;margin:0 0 12px}
+.hero h2 span{color:var(--blue-600)}
+.hero p{max-width:720px;margin:auto;color:var(--muted);line-height:1.75}
+.grid{display:grid;grid-template-columns:280px 1fr;gap:18px}
+.sidebar{
+  background:rgba(255,255,255,.84);border:1px solid var(--line);border-radius:22px;
+  padding:12px;box-shadow:var(--shadow);height:max-content;position:sticky;top:108px
+}
+.nav-btn{
+  width:100%;text-align:left;border:0;background:transparent;color:var(--ink);
+  padding:13px 14px;border-radius:13px;margin:3px 0;transition:.2s
+}
+.nav-btn:hover,.nav-btn.active{background:var(--blue-100);color:var(--blue-700);font-weight:700}
+.content{min-width:0}
+.card{
+  background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:22px;
+  padding:24px;box-shadow:var(--shadow);margin-bottom:18px
+}
+.card h3{margin:0 0 5px;font-size:21px}.sub{color:var(--muted);font-size:13px;margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}
+label{font-weight:700;font-size:13px}
+input,textarea,select.input{
+  width:100%;border:1px solid var(--line);border-radius:12px;background:#fbfeff;
+  padding:12px 13px;outline:none;transition:.2s
+}
+textarea{min-height:100px;resize:vertical}
+input:focus,textarea:focus,select.input:focus{border-color:var(--blue-500);box-shadow:0 0 0 4px rgba(76,169,223,.12)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+.badge{background:var(--blue-100);color:var(--blue-700);padding:5px 9px;border-radius:999px;font-size:12px}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap}
+.repeater{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:12px;background:#fbfeff}
+.repeater-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.summary{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px
+}
+.stat{padding:16px;border-radius:16px;background:linear-gradient(135deg,#f2fbff,#fff);border:1px solid var(--line)}
+.stat strong{display:block;font-size:22px;color:var(--blue-700)}.stat small{color:var(--muted)}
+.notice{padding:14px 16px;background:#eef9ff;border-left:4px solid var(--blue-500);border-radius:12px;color:#49677c;font-size:13px;line-height:1.6}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:28px 10px}
+.toast{
+  position:fixed;right:20px;bottom:20px;background:#17324a;color:white;padding:12px 16px;
+  border-radius:12px;opacity:0;transform:translateY(10px);transition:.25s;z-index:50
+}
+.toast.show{opacity:1;transform:translateY(0)}
+@media(max-width:850px){
+  .grid{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow:auto;gap:5px}
+  .nav-btn{white-space:nowrap;width:auto}.form-grid,.summary{grid-template-columns:1fr}
+  .header{position:static}.actions{justify-content:flex-end}
+}
+@media print{
+  .header,.sidebar,.actions,.row-actions,.toast{display:none!important}
+  body{background:white}.app{max-width:none;padding:0}.card{box-shadow:none;break-inside:avoid}
+  .hero{padding:10px}
+}
+</style>
+<script id="embedded-medical-data" type="application/json">{}</script>
+</head>
+<body>
+<div class="app">
+<header class="header">
+  <div class="brand">
+    <div class="logo">+</div>
+    <div>
+      <h1>MyMed Pocket</h1>
+      <p data-i18n="tagline">我的多國語言隨身電子病歷</p>
+    </div>
+  </div>
+  <div class="actions">
+    <select id="language" aria-label="Language">
+      <option value="zh-TW">繁體中文</option>
+      <option value="en">English</option>
+      <option value="ja">日本語</option>
+      <option value="ko">한국어</option>
+      <option value="vi">Tiếng Việt</option>
+    </select>
+    <button class="btn soft" onclick="saveData()" data-i18n="save">儲存</button>
+    <button class="btn primary" onclick="window.print()" data-i18n="print">列印 / PDF</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h2><span data-i18n="heroA">一份病歷</span><br><span data-i18n="heroB">帶著走，世界都看得懂</span></h2>
+  <p data-i18n="heroText">把重要健康資訊整理在單一頁面，並可切換多國語言。適合旅遊、就醫、緊急情況或跨國醫療溝通。</p>
+</section>
+
+<div class="grid">
+<aside class="sidebar" id="nav">
+  <button class="nav-btn active" data-target="basic" data-i18n="navBasic">👤 基本資料</button>
+  <button class="nav-btn" data-target="history" data-i18n="navHistory">🩺 個人健康史</button>
+  <button class="nav-btn" data-target="family" data-i18n="navFamily">👨‍👩‍👧 家族史</button>
+  <button class="nav-btn" data-target="surgery" data-i18n="navSurgery">🏥 手術 / 住院史</button>
+  <button class="nav-btn" data-target="meds" data-i18n="navMeds">💊 用藥 / 過敏</button>
+  <button class="nav-btn" data-target="vaccine" data-i18n="navVaccine">💉 疫苗 / 檢查</button>
+  <button class="nav-btn" data-target="emergency" data-i18n="navEmergency">🚨 緊急資訊</button>
+  <button class="nav-btn" data-target="notes" data-i18n="navNotes">📝 醫療備註</button>
+</aside>
+
+<main class="content">
+<section class="summary">
+  <div class="stat"><strong id="completion">0%</strong><small data-i18n="complete">資料完成度</small></div>
+  <div class="stat"><strong id="medCount">0</strong><small data-i18n="medCount">目前用藥筆數</small></div>
+  <div class="stat"><strong id="allergyStatus">—</strong><small data-i18n="allergy">過敏狀態</small></div>
+</section>
+
+<div class="notice" data-i18n="notice">
+  重要：這是一個靜態個人病歷模板。資料只會儲存在目前瀏覽器的 localStorage（除非你自行加入後端），不等同醫院正式電子病歷。若按「另存單一 HTML」，目前資料會直接嵌入新的 HTML 檔案中；請妥善保管檔案，不要在公共或共用裝置儲存高度敏感資料。
+</div>
+
+<section class="card" id="basic">
+  <h3 data-i18n="basicTitle">基本資料</h3><div class="sub" data-i18n="basicSub">建立一張能讓醫療人員快速理解你的基本資訊卡。</div>
+  <div class="form-grid">
+    <div class="field"><label data-i18n="name">姓名</label><input data-key="name"></div>
+    <div class="field"><label data-i18n="dob">出生日期</label><input type="date" data-key="dob"></div>
+    <div class="field"><label data-i18n="sex">生理性別</label><select class="input" data-key="sex"><option></option><option>Female</option><option>Male</option><option>Other</option><option>Prefer not to say</option></select></div>
+    <div class="field"><label data-i18n="blood">血型</label><select class="input" data-key="blood"><option></option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option><option>Unknown</option></select></div>
+    <div class="field"><label data-i18n="country">國籍 / 居住地</label><input data-key="country"></div>
+    <div class="field"><label data-i18n="phone">電話</label><input data-key="phone"></div>
+    <div class="field full"><label data-i18n="address">地址（可選）</label><input data-key="address"></div>
+  </div>
+</section>
+
+<section class="card" id="history">
+  <h3 data-i18n="historyTitle">個人健康史</h3><div class="sub" data-i18n="historySub">包含慢性病、重大疾病、感染史、心理健康相關資訊等。</div>
+  <div class="form-grid">
+    <div class="field full"><label data-i18n="conditions">目前 / 過去疾病</label><textarea data-key="conditions" placeholder="例如：氣喘、糖尿病、心臟疾病……"></textarea></div>
+    <div class="field full"><label data-i18n="infections">重要感染 / 傳染病史</label><textarea data-key="infections"></textarea></div>
+    <div class="field full"><label data-i18n="otherHistory">其他重要健康史</label><textarea data-key="otherHistory"></textarea></div>
+  </div>
+</section>
+
+<section class="card" id="family">
+  <h3 data-i18n="familyTitle">家族病史</h3><div class="sub" data-i18n="familySub">記錄直系親屬的重要疾病與家族遺傳風險。</div>
+  <div class="form-grid">
+    <div class="field"><label data-i18n="familyHeart">心血管疾病</label><textarea data-key="familyHeart"></textarea></div>
+    <div class="field"><label data-i18n="familyCancer">癌症</label><textarea data-key="familyCancer"></textarea></div>
+    <div class="field"><label data-i18n="familyDiabetes">糖尿病</label><textarea data-key="familyDiabetes"></textarea></div>
+    <div class="field"><label data-i18n="familyGenetic">遺傳疾病</label><textarea data-key="familyGenetic"></textarea></div>
+    <div class="field full"><label data-i18n="familyOther">其他家族史</label><textarea data-key="familyOther"></textarea></div>
+  </div>
+</section>
+
+<section class="card" id="surgery">
+  <div class="section-title"><div><h3 data-i18n="surgeryTitle">手術 / 住院史</h3><div class="sub" data-i18n="surgerySub">把過往手術與重要住院事件按時間整理。</div></div><button class="btn soft" onclick="addSurgery()" data-i18n="add">＋ 新增</button></div>
+  <div id="surgeryList"></div>
+</section>
+
+<section class="card" id="meds">
+  <div class="section-title"><div><h3 data-i18n="medTitle">用藥 / 過敏</h3><div class="sub" data-i18n="medSub">醫師最常需要快速確認的資訊之一。</div></div><button class="btn soft" onclick="addMedication()" data-i18n="add">＋ 新增</button></div>
+  <div class="form-grid">
+    <div class="field"><label data-i18n="allergyLabel">藥物 / 食物過敏</label><input data-key="allergies"></div>
+    <div class="field"><label data-i18n="reaction">過敏反應</label><input data-key="allergyReaction"></div>
+  </div><br>
+  <div id="medList"></div>
+</section>
+
+<section class="card" id="vaccine">
+  <h3 data-i18n="vaccineTitle">疫苗 / 檢查紀錄</h3><div class="sub" data-i18n="vaccineSub">可記錄疫苗接種、重要檢查、檢驗數值與日期。</div>
+  <div class="form-grid">
+    <div class="field full"><label data-i18n="vaccines">疫苗紀錄</label><textarea data-key="vaccines" placeholder="疫苗名稱｜日期｜劑次"></textarea></div>
+    <div class="field full"><label data-i18n="tests">重要檢查 / 檢驗</label><textarea data-key="tests" placeholder="檢查｜日期｜結果"></textarea></div>
+  </div>
+</section>
+
+<section class="card" id="emergency">
+  <h3 data-i18n="emergencyTitle">緊急資訊</h3><div class="sub" data-i18n="emergencySub">讓緊急醫療人員可以最快找到必要資訊。</div>
+  <div class="form-grid">
+    <div class="field"><label data-i18n="contactName">緊急聯絡人</label><input data-key="emergencyName"></div>
+    <div class="field"><label data-i18n="contactPhone">聯絡電話</label><input data-key="emergencyPhone"></div>
+    <div class="field"><label data-i18n="doctor">主要醫師 / 診所</label><input data-key="doctor"></div>
+    <div class="field"><label data-i18n="insurance">保險 / 會員編號（可選）</label><input data-key="insurance"></div>
+    <div class="field full"><label data-i18n="emergencyNotes">緊急醫療注意事項</label><textarea data-key="emergencyNotes"></textarea></div>
+  </div>
+</section>
+
+<section class="card" id="notes">
+  <h3 data-i18n="notesTitle">醫療備註</h3><div class="sub" data-i18n="notesSub">任何希望醫療人員知道，但尚未分類的資訊。</div>
+  <div class="field"><textarea data-key="notes" placeholder="例如：語言需求、特殊溝通需求、重要醫療文件位置……"></textarea></div>
+</section>
+
+<div class="row-actions">
+  <button class="btn primary" onclick="saveData()" data-i18n="saveAll">儲存到此裝置</button>
+  <button class="btn" onclick="exportData()" data-i18n="export">匯出 JSON</button>
+  <button class="btn danger" onclick="clearData()" data-i18n="clear">清除本機資料</button>
+</div>
+</main>
+</div>
+<footer>MyMed Pocket · Static HTML / CSS / JavaScript · <span data-i18n="footer">請依醫療專業人員建議使用。</span></footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const translations={
+"zh-TW":{
+tagline:"我的多國語言隨身電子病歷",save:"儲存",print:"列印 / PDF",heroA:"一份病歷",heroB:"帶著走，世界都看得懂",
+heroText:"把重要健康資訊整理在單一頁面，並可切換多國語言。適合旅遊、就醫、緊急情況或跨國醫療溝通。",
+navBasic:"👤 基本資料",navHistory:"🩺 個人健康史",navFamily:"👨‍👩‍👧 家族史",navSurgery:"🏥 手術 / 住院史",navMeds:"💊 用藥 / 過敏",navVaccine:"💉 疫苗 / 檢查",navEmergency:"🚨 緊急資訊",navNotes:"📝 醫療備註",
+complete:"資料完成度",medCount:"目前用藥筆數",allergy:"過敏狀態",notice:"重要：這是一個靜態個人病歷模板。資料只會儲存在目前瀏覽器的 localStorage（除非你自行加入後端），不等同醫院正式電子病歷。若按「另存單一 HTML」，目前資料會直接嵌入新的 HTML 檔案中；請妥善保管檔案，不要在公共或共用裝置儲存高度敏感資料。",
+basicTitle:"基本資料",basicSub:"建立一張能讓醫療人員快速理解你的基本資訊卡。",name:"姓名",dob:"出生日期",sex:"生理性別",blood:"血型",country:"國籍 / 居住地",phone:"電話",address:"地址（可選）",
+historyTitle:"個人健康史",historySub:"包含慢性病、重大疾病、感染史、心理健康相關資訊等。",conditions:"目前 / 過去疾病",infections:"重要感染 / 傳染病史",otherHistory:"其他重要健康史",
+familyTitle:"家族病史",familySub:"記錄直系親屬的重要疾病與家族遺傳風險。",familyHeart:"心血管疾病",familyCancer:"癌症",familyDiabetes:"糖尿病",familyGenetic:"遺傳疾病",familyOther:"其他家族史",
+surgeryTitle:"手術 / 住院史",surgerySub:"把過往手術與重要住院事件按時間整理。",add:"＋ 新增",medTitle:"用藥 / 過敏",medSub:"醫師最常需要快速確認的資訊之一。",allergyLabel:"藥物 / 食物過敏",reaction:"過敏反應",
+vaccineTitle:"疫苗 / 檢查紀錄",vaccineSub:"可記錄疫苗接種、重要檢查、檢驗數值與日期。",vaccines:"疫苗紀錄",tests:"重要檢查 / 檢驗",
+emergencyTitle:"緊急資訊",emergencySub:"讓緊急醫療人員可以最快找到必要資訊。",contactName:"緊急聯絡人",contactPhone:"聯絡電話",doctor:"主要醫師 / 診所",insurance:"保險 / 會員編號（可選）",emergencyNotes:"緊急醫療注意事項",
+notesTitle:"醫療備註",notesSub:"任何希望醫療人員知道，但尚未分類的資訊。",saveAll:"儲存到此裝置",singleFile:"另存單一 HTML",clear:"清除資料",footer:"請依醫療專業人員建議使用。",
+surgeryDate:"日期",surgeryName:"手術 / 住院事件",surgeryHospital:"醫院 / 診所",surgeryNote:"備註",medName:"藥品名稱",medDose:"劑量",medFreq:"頻率",medReason:"用途",remove:"刪除",saved:"已儲存到此裝置",cleared:"本機資料已清除",exported:"已匯出 JSON"
+},
+"en":{
+tagline:"My multilingual pocket medical record",save:"Save",print:"Print / PDF",heroA:"One medical record",heroB:"that travels with you",
+heroText:"Keep essential health information in one place and switch languages for travel, care, emergencies, and international medical communication.",
+navBasic:"👤 Basic Profile",navHistory:"🩺 Health History",navFamily:"👨‍👩‍👧 Family History",navSurgery:"🏥 Surgery / Hospital",navMeds:"💊 Medications / Allergies",navVaccine:"💉 Vaccines / Tests",navEmergency:"🚨 Emergency",navNotes:"📝 Notes",
+complete:"Profile completion",medCount:"Current medications",allergy:"Allergy status",notice:"Important: This is a static personal medical-record template. Data is stored only in this browser's localStorage unless you add a backend. It is not an official hospital EHR. When you save as a single HTML, the current data is embedded directly into that HTML file. Protect the file and avoid storing highly sensitive data on public/shared devices.",
+basicTitle:"Basic Profile",basicSub:"A quick profile card for healthcare professionals.",name:"Full name",dob:"Date of birth",sex:"Sex",blood:"Blood type",country:"Nationality / residence",phone:"Phone",address:"Address (optional)",
+historyTitle:"Personal Health History",historySub:"Chronic conditions, major illnesses, infections, and other relevant history.",conditions:"Current / past conditions",infections:"Important infections",otherHistory:"Other important health history",
+familyTitle:"Family Medical History",familySub:"Important conditions and hereditary risks in close relatives.",familyHeart:"Cardiovascular disease",familyCancer:"Cancer",familyDiabetes:"Diabetes",familyGenetic:"Genetic conditions",familyOther:"Other family history",
+surgeryTitle:"Surgery / Hospitalization",surgerySub:"Organize previous surgeries and major hospital events.",add:"＋ Add",medTitle:"Medications / Allergies",medSub:"Information clinicians often need to verify quickly.",allergyLabel:"Drug / food allergies",reaction:"Allergic reaction",
+vaccineTitle:"Vaccines / Tests",vaccineSub:"Track vaccinations, important tests, results, and dates.",vaccines:"Vaccination record",tests:"Important tests / results",
+emergencyTitle:"Emergency Information",emergencySub:"Keep essential information easy to find in urgent situations.",contactName:"Emergency contact",contactPhone:"Contact phone",doctor:"Primary doctor / clinic",insurance:"Insurance / member ID (optional)",emergencyNotes:"Emergency medical notes",
+notesTitle:"Medical Notes",notesSub:"Anything important that does not fit another category.",saveAll:"Save on this device",singleFile:"Save as single HTML",clear:"Clear data",footer:"Use together with advice from qualified healthcare professionals.",
+surgeryDate:"Date",surgeryName:"Surgery / hospitalization",surgeryHospital:"Hospital / clinic",surgeryNote:"Notes",medName:"Medication",medDose:"Dose",medFreq:"Frequency",medReason:"Purpose",remove:"Remove",saved:"Saved on this device",cleared:"Local data cleared",exported:"JSON exported"
+},
+"ja":{"tagline":"多言語ポケット電子カルテ","save":"保存","print":"印刷 / PDF","heroA":"ひとつの医療記録を", "heroB":"世界へ持ち歩く","heroText":"重要な健康情報を一つにまとめ、言語を切り替えられます。旅行、受診、緊急時、海外医療に便利です。","navBasic":"👤 基本情報","navHistory":"🩺 既往歴","navFamily":"👨‍👩‍👧 家族歴","navSurgery":"🏥 手術 / 入院","navMeds":"💊 薬 / アレルギー","navVaccine":"💉 ワクチン / 検査","navEmergency":"🚨 緊急情報","navNotes":"📝 医療メモ","complete":"入力率","medCount":"服用中の薬","allergy":"アレルギー","notice":"重要：これは静的な個人用医療記録テンプレートです。データはこのブラウザのlocalStorageにのみ保存されます。正式な病院電子カルテではありません。共有端末には機密情報を保存しないでください。","basicTitle":"基本情報","basicSub":"医療スタッフがすぐ確認できるプロフィール。","name":"氏名","dob":"生年月日","sex":"性別","blood":"血液型","country":"国籍 / 居住地","phone":"電話","address":"住所（任意）","historyTitle":"既往歴","historySub":"慢性疾患、重大な病気、感染症など。","conditions":"現在 / 過去の病気","infections":"重要な感染症","otherHistory":"その他の健康歴","familyTitle":"家族歴","familySub":"近親者の重要な病気や遺伝的リスク。","familyHeart":"心血管疾患","familyCancer":"がん","familyDiabetes":"糖尿病","familyGenetic":"遺伝性疾患","familyOther":"その他の家族歴","surgeryTitle":"手術 / 入院歴","surgerySub":"過去の手術や重要な入院を記録。","add":"＋ 追加","medTitle":"薬 / アレルギー","medSub":"医療スタッフが素早く確認する情報。","allergyLabel":"薬 / 食物アレルギー","reaction":"反応","vaccineTitle":"ワクチン / 検査","vaccineSub":"接種、検査、結果、日付を記録。","vaccines":"ワクチン記録","tests":"重要な検査 / 結果","emergencyTitle":"緊急情報","emergencySub":"緊急時に必要な情報を見つけやすくします。","contactName":"緊急連絡先","contactPhone":"電話番号","doctor":"主治医 / クリニック","insurance":"保険 / 会員番号（任意）","emergencyNotes":"緊急時の医療メモ","notesTitle":"医療メモ","notesSub":"他の項目に入らない重要情報。","saveAll":"この端末に保存","export":"JSONを書き出す","clear":"ローカルデータを消去","footer":"医療専門家の助言と併用してください。","surgeryDate":"日付","surgeryName":"手術 / 入院","surgeryHospital":"病院 / クリニック","surgeryNote":"メモ","medName":"薬名","medDose":"用量","medFreq":"頻度","medReason":"目的","remove":"削除","saved":"この端末に保存しました","cleared":"ローカルデータを消去しました","exported":"JSONを出力しました"},
+"ko":{"tagline":"다국어 휴대용 전자 의료 기록","save":"저장","print":"인쇄 / PDF","heroA":"하나의 의료 기록을","heroB":"세계 어디서나","heroText":"중요한 건강 정보를 한곳에 정리하고 언어를 전환할 수 있습니다. 여행, 진료, 응급 상황 및 해외 의료에 유용합니다.","navBasic":"👤 기본 정보","navHistory":"🩺 개인 병력","navFamily":"👨‍👩‍👧 가족력","navSurgery":"🏥 수술 / 입원","navMeds":"💊 약물 / 알레르기","navVaccine":"💉 예방접종 / 검사","navEmergency":"🚨 응급 정보","navNotes":"📝 의료 메모","complete":"작성률","medCount":"복용 중인 약","allergy":"알레르기","notice":"중요: 정적 개인 의료 기록 템플릿입니다. 별도 백엔드를 추가하지 않는 한 데이터는 현재 브라우저의 localStorage에만 저장됩니다. 공식 병원 전자의무기록이 아닙니다. 공용 기기에 민감한 정보를 저장하지 마세요.","basicTitle":"기본 정보","basicSub":"의료진이 빠르게 확인할 수 있는 프로필입니다.","name":"이름","dob":"생년월일","sex":"성별","blood":"혈액형","country":"국적 / 거주지","phone":"전화","address":"주소(선택)","historyTitle":"개인 병력","historySub":"만성질환, 주요 질환, 감염력 및 기타 병력입니다.","conditions":"현재 / 과거 질환","infections":"중요 감염병","otherHistory":"기타 건강 기록","familyTitle":"가족력","familySub":"가족의 주요 질환 및 유전 위험을 기록합니다.","familyHeart":"심혈관 질환","familyCancer":"암","familyDiabetes":"당뇨병","familyGenetic":"유전 질환","familyOther":"기타 가족력","surgeryTitle":"수술 / 입원력","surgerySub":"과거 수술과 주요 입원을 기록합니다.","add":"＋ 추가","medTitle":"약물 / 알레르기","medSub":"의료진이 빠르게 확인해야 하는 정보입니다.","allergyLabel":"약물 / 음식 알레르기","reaction":"알레르기 반응","vaccineTitle":"예방접종 / 검사","vaccineSub":"예방접종, 검사, 결과 및 날짜를 기록합니다.","vaccines":"예방접종 기록","tests":"중요 검사 / 결과","emergencyTitle":"응급 정보","emergencySub":"응급 상황에서 필요한 정보를 빠르게 찾을 수 있습니다.","contactName":"응급 연락처","contactPhone":"전화번호","doctor":"주치의 / 병원","insurance":"보험 / 회원번호(선택)","emergencyNotes":"응급 의료 메모","notesTitle":"의료 메모","notesSub":"다른 항목에 포함되지 않은 중요한 정보입니다.","saveAll":"이 기기에 저장","export":"JSON 내보내기","clear":"로컬 데이터 삭제","footer":"의료 전문가의 조언과 함께 사용하세요.","surgeryDate":"날짜","surgeryName":"수술 / 입원","surgeryHospital":"병원 / 클리닉","surgeryNote":"메모","medName":"약 이름","medDose":"용량","medFreq":"복용 빈도","medReason":"용도","remove":"삭제","saved":"이 기기에 저장했습니다","cleared":"로컬 데이터가 삭제되었습니다","exported":"JSON을 내보냈습니다"},
+"vi":{"tagline":"Hồ sơ y tế cá nhân đa ngôn ngữ","save":"Lưu","print":"In / PDF","heroA":"Một hồ sơ y tế","heroB":"mang theo khắp thế giới","heroText":"Lưu thông tin sức khỏe quan trọng ở một nơi và chuyển đổi ngôn ngữ khi đi du lịch, khám bệnh, cấp cứu hoặc điều trị quốc tế.","navBasic":"👤 Thông tin cơ bản","navHistory":"🩺 Tiền sử cá nhân","navFamily":"👨‍👩‍👧 Tiền sử gia đình","navSurgery":"🏥 Phẫu thuật / Nhập viện","navMeds":"💊 Thuốc / Dị ứng","navVaccine":"💉 Vắc-xin / Xét nghiệm","navEmergency":"🚨 Thông tin khẩn cấp","navNotes":"📝 Ghi chú y tế","complete":"Mức độ hoàn thiện","medCount":"Số thuốc đang dùng","allergy":"Dị ứng","notice":"Quan trọng: Đây là mẫu hồ sơ y tế cá nhân tĩnh. Dữ liệu chỉ được lưu trong localStorage của trình duyệt này nếu bạn không thêm backend. Đây không phải hồ sơ bệnh án điện tử chính thức của bệnh viện. Không lưu dữ liệu nhạy cảm trên thiết bị công cộng.","basicTitle":"Thông tin cơ bản","basicSub":"Thông tin nhanh để nhân viên y tế nắm được hồ sơ của bạn.","name":"Họ tên","dob":"Ngày sinh","sex":"Giới tính","blood":"Nhóm máu","country":"Quốc tịch / nơi cư trú","phone":"Điện thoại","address":"Địa chỉ (tùy chọn)","historyTitle":"Tiền sử sức khỏe cá nhân","historySub":"Bệnh mạn tính, bệnh nặng, nhiễm trùng và các tiền sử liên quan.","conditions":"Bệnh hiện tại / trước đây","infections":"Nhiễm trùng quan trọng","otherHistory":"Tiền sử sức khỏe khác","familyTitle":"Tiền sử gia đình","familySub":"Bệnh quan trọng và nguy cơ di truyền ở người thân.","familyHeart":"Bệnh tim mạch","familyCancer":"Ung thư","familyDiabetes":"Tiểu đường","familyGenetic":"Bệnh di truyền","familyOther":"Tiền sử gia đình khác","surgeryTitle":"Phẫu thuật / Nhập viện","surgerySub":"Ghi lại các ca phẫu thuật và lần nhập viện quan trọng.","add":"＋ Thêm","medTitle":"Thuốc / Dị ứng","medSub":"Thông tin bác sĩ thường cần kiểm tra nhanh.","allergyLabel":"Dị ứng thuốc / thực phẩm","reaction":"Phản ứng dị ứng","vaccineTitle":"Vắc-xin / Xét nghiệm","vaccineSub":"Theo dõi tiêm chủng, xét nghiệm, kết quả và ngày tháng.","vaccines":"Lịch sử tiêm chủng","tests":"Xét nghiệm / kết quả quan trọng","emergencyTitle":"Thông tin khẩn cấp","emergencySub":"Giúp tìm nhanh thông tin cần thiết trong tình huống khẩn cấp.","contactName":"Người liên hệ khẩn cấp","contactPhone":"Số điện thoại","doctor":"Bác sĩ / phòng khám chính","insurance":"Bảo hiểm / mã thành viên (tùy chọn)","emergencyNotes":"Ghi chú y tế khẩn cấp","notesTitle":"Ghi chú y tế","notesSub":"Thông tin quan trọng chưa thuộc danh mục khác.","saveAll":"Lưu trên thiết bị này","export":"Xuất JSON","clear":"Xóa dữ liệu cục bộ","footer":"Hãy sử dụng cùng hướng dẫn của chuyên gia y tế.","surgeryDate":"Ngày","surgeryName":"Phẫu thuật / nhập viện","surgeryHospital":"Bệnh viện / phòng khám","surgeryNote":"Ghi chú","medName":"Tên thuốc","medDose":"Liều","medFreq":"Tần suất","medReason":"Mục đích","remove":"Xóa","saved":"Đã lưu trên thiết bị này","cleared":"Đã xóa dữ liệu cục bộ","exported":"Đã xuất JSON"}
+};
+
+let surgeryData=JSON.parse(localStorage.getItem("mymed_surgery")||"[]");
+let medData=JSON.parse(localStorage.getItem("mymed_meds")||"[]");
+
+function t(k){return (translations[document.getElementById("language").value]||translations["zh-TW"])[k]||translations["zh-TW"][k]||k}
+function applyLanguage(){
+  const lang=document.getElementById("language").value;
+  document.documentElement.lang=lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>el.textContent=t(el.dataset.i18n));
+  renderRepeaters(); updateStats();
+}
+document.getElementById("language").addEventListener("change",applyLanguage);
+
+document.querySelectorAll(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+  document.getElementById(btn.dataset.target).scrollIntoView({behavior:"smooth",block:"start"});
+}));
+
+function addSurgery(){surgeryData.push({date:"",name:"",hospital:"",note:""});saveRepeaters();renderRepeaters()}
+function addMedication(){medData.push({name:"",dose:"",freq:"",reason:""});saveRepeaters();renderRepeaters()}
+function saveRepeaters(){localStorage.setItem("mymed_surgery",JSON.stringify(surgeryData));localStorage.setItem("mymed_meds",JSON.stringify(medData))}
+function renderRepeaters(){
+  const sl=document.getElementById("surgeryList");sl.innerHTML="";
+  surgeryData.forEach((x,i)=>{
+    sl.innerHTML+=`<div class="repeater"><div class="repeater-head"><strong>${t("surgeryName")} #${i+1}</strong><button class="btn danger" onclick="removeSurgery(${i})">${t("remove")}</button></div>
+    <div class="form-grid"><div class="field"><label>${t("surgeryDate")}</label><input type="date" value="${esc(x.date)}" onchange="surgeryData[${i}].date=this.value;saveRepeaters()"></div>
+    <div class="field"><label>${t("surgeryName")}</label><input value="${esc(x.name)}" onchange="surgeryData[${i}].name=this.value;saveRepeaters()"></div>
+    <div class="field"><label>${t("surgeryHospital")}</label><input value="${esc(x.hospital)}" onchange="surgeryData[${i}].hospital=this.value;saveRepeaters()"></div>
+    <div class="field"><label>${t("surgeryNote")}</label><input value="${esc(x.note)}" onchange="surgeryData[${i}].note=this.value;saveRepeaters()"></div></div></div>`;
+  });
+  const ml=document.getElementById("medList");ml.innerHTML="";
+  medData.forEach((x,i)=>{
+    ml.innerHTML+=`<div class="repeater"><div class="repeater-head"><strong>${t("medName")} #${i+1}</strong><button class="btn danger" onclick="removeMedication(${i})">${t("remove")}</button></div>
+    <div class="form-grid"><div class="field"><label>${t("medName")}</label><input value="${esc(x.name)}" onchange="medData[${i}].name=this.value;saveRepeaters();updateStats()"></div>
+    <div class="field"><label>${t("medDose")}</label><input value="${esc(x.dose)}" onchange="medData[${i}].dose=this.value;saveRepeaters()"></div>
+    <div class="field"><label>${t("medFreq")}</label><input value="${esc(x.freq)}" onchange="medData[${i}].freq=this.value;saveRepeaters()"></div>
+    <div class="field"><label>${t("medReason")}</label><input value="${esc(x.reason)}" onchange="medData[${i}].reason=this.value;saveRepeaters()"></div></div></div>`;
+  });
+}
+function removeSurgery(i){surgeryData.splice(i,1);saveRepeaters();renderRepeaters()}
+function removeMedication(i){medData.splice(i,1);saveRepeaters();renderRepeaters();updateStats()}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+
+function saveData(){
+  const data={};
+  document.querySelectorAll("[data-key]").forEach(el=>data[el.dataset.key]=el.value);
+  data.updatedAt=new Date().toISOString();
+  localStorage.setItem("mymed_profile",JSON.stringify(data));saveRepeaters();updateStats();toast(t("saved"));
+}
+function getEmbeddedData(){
+  const node=document.getElementById("embedded-medical-data");
+  if(!node) return null;
+  try{return JSON.parse(node.textContent||"{}")}catch(e){return null}
+}
+function loadData(){
+  const embedded=getEmbeddedData();
+  const data=embedded || JSON.parse(localStorage.getItem("mymed_profile")||"{}");
+  if(embedded){
+    surgeryData=Array.isArray(data.surgeries)?data.surgeries:[];
+    medData=Array.isArray(data.medications)?data.medications:[];
+  }
+  document.querySelectorAll("[data-key]").forEach(el=>{if(data[el.dataset.key]!=null)el.value=data[el.dataset.key]});
+}
+
+function getCurrentData(){
+  const data={};
+  document.querySelectorAll("[data-key]").forEach(el=>data[el.dataset.key]=el.value);
+  data.surgeries=surgeryData;
+  data.medications=medData;
+  data.updatedAt=new Date().toISOString();
+  return data;
+}
+function downloadSingleFile(){
+  saveData();
+  const data = getCurrentData();
+  const marker = '<script id="embedded-medical-data" type="application/json">';
+  const safe = JSON.stringify(data).replace(/<\//g,"<\\/");
+  const snapshot = marker + safe + '<\/script>';
+  let out = document.documentElement.outerHTML;
+  const old = out.match(/<script id="embedded-medical-data" type="application\/json">[\\s\\S]*?<\\/script>/);
+  if(old) out = out.replace(old[0], snapshot);
+  else out = out.replace("</head>", snapshot + "</head>");
+  const doc = "<!DOCTYPE html>\n" + out;
+  const blob = new Blob([doc], {type:"text/html;charset=utf-8"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="mymed-pocket-single-file.html";
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(a.href);
+  toast(t("singleFile"));
+}
+
+function clearData(){
+  if(confirm("確定要清除目前這份病歷資料嗎？")){
+    localStorage.removeItem("mymed_profile");localStorage.removeItem("mymed_surgery");localStorage.removeItem("mymed_meds");
+    document.querySelectorAll("[data-key]").forEach(el=>el.value="");surgeryData=[];medData=[];renderRepeaters();updateStats();toast(t("cleared"));
+  }
+}
+function updateStats(){
+  const els=[...document.querySelectorAll("[data-key]")];
+  const filled=els.filter(x=>x.value.trim()).length;
+  document.getElementById("completion").textContent=Math.round(filled/els.length*100)+"%";
+  document.getElementById("medCount").textContent=medData.filter(x=>x.name.trim()).length;
+  const a=document.querySelector('[data-key="allergies"]').value.trim();
+  document.getElementById("allergyStatus").textContent=a||"—";
+}
+document.querySelectorAll("[data-key]").forEach(el=>el.addEventListener("input",updateStats));
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),1800)}
+loadData();renderRepeaters();applyLanguage();
+</script>
+</body>
+</html>
